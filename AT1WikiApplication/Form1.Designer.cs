@@ -45,7 +45,7 @@
             this.linearButton = new System.Windows.Forms.RadioButton();
             this.nonLinearButton = new System.Windows.Forms.RadioButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.listViewDisplay = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -183,6 +183,7 @@
             this.linearButton.TabStop = true;
             this.linearButton.Text = "Linear";
             this.linearButton.UseVisualStyleBackColor = true;
+            this.linearButton.CheckedChanged += new System.EventHandler(this.linearButton_CheckedChanged);
             // 
             // nonLinearButton
             // 
@@ -203,28 +204,28 @@
             this.statusStrip1.TabIndex = 19;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // listView1
+            // listViewDisplay
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewDisplay.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(427, 174);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(317, 243);
-            this.listView1.TabIndex = 20;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.listViewDisplay.HideSelection = false;
+            this.listViewDisplay.Location = new System.Drawing.Point(427, 174);
+            this.listViewDisplay.Name = "listViewDisplay";
+            this.listViewDisplay.Size = new System.Drawing.Size(317, 243);
+            this.listViewDisplay.TabIndex = 20;
+            this.listViewDisplay.UseCompatibleStateImageBehavior = false;
+            this.listViewDisplay.View = System.Windows.Forms.View.Details;
+            this.listViewDisplay.SelectedIndexChanged += new System.EventHandler(this.listViewDisplay_SelectedIndexChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(806, 456);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.listViewDisplay);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.nonLinearButton);
             this.Controls.Add(this.linearButton);
@@ -267,7 +268,7 @@
         private System.Windows.Forms.RadioButton linearButton;
         private System.Windows.Forms.RadioButton nonLinearButton;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listViewDisplay;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
