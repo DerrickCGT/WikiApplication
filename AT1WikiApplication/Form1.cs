@@ -16,5 +16,19 @@ namespace AT1WikiApplication
         {
             InitializeComponent();
         }
+
+        static int row = 4;
+        static int col = 12;
+        private string[,] WikiTable = new string[row, col];
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
