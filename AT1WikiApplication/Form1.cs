@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,12 +29,14 @@ namespace AT1WikiApplication
         static int row = 12;
         static int col = 4;
         private string[,] WikiTable = new string[row, col];
-        private int rowRef = 0;
+        int rowRef = 0;
 
         private void displayListView()
         {
+            bubbleSort();
             listViewDisplay.Items.Clear();
-            for (int x = 0; x < row ; x++)
+
+            for (int x = 0; x < row; x++)
             {
                 ListViewItem lvi = new ListViewItem(WikiTable[x, 0]);
                 lvi.SubItems.Add(WikiTable[x, 1]);
@@ -40,6 +44,7 @@ namespace AT1WikiApplication
                 lvi.SubItems.Add(WikiTable[x, 3]);
                 listViewDisplay.Items.Add(lvi);
             }
+            
         }
 
         private void clearDisplay()
@@ -49,9 +54,34 @@ namespace AT1WikiApplication
             linearButton.Checked = false;
             nonLinearButton.Checked = false;
             definitionTextBox.Clear();
-            searchTextBox.Clear();  
+            searchTextBox.Clear();
         }
-    
+
+        private void bubbleSort()
+        {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = i + 1; j < row; j++)
+                {
+                    if (string.Compare(WikiTable[i, 0], WikiTable[j, 0]) > 0)
+                    {
+                        swap(i, j);
+                    }
+                }
+            }
+        }
+
+        private void swap(int i, int j)
+        {
+            string temp;
+            for (int k = 0; k < col; k++)
+            {
+                temp = WikiTable[i, k];
+                WikiTable[i, k] = WikiTable[j, k];
+                WikiTable[j, k] = temp;
+
+            }
+        }
 
         private void addButton_Click(object sender, EventArgs e)
         {
@@ -80,74 +110,153 @@ namespace AT1WikiApplication
 
                 }
                 displayListView();
+                clearDisplay();
             }
             catch (Exception)
             {
                 MessageBox.Show("Sorry! WikiTable is full and no new data added.");
             }
-            
+
         }
 
         private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int currentItem; 
+
+            if (listViewDisplay.SelectedIndices.Count > 0) //ensure the selected indices will not turn to null for second click
+            {
+                currentItem = listViewDisplay.SelectedIndices[0];
+
+                dataStructureTextBox.Text = WikiTable[currentItem, 0];
+                categoryTextBox.Text = WikiTable[currentItem, 1];
+                if (WikiTable[currentItem, 2] == "Linear")
+                {
+                    linearButton.Checked = true;
+                }
+                if (WikiTable[currentItem, 2] == "Non-Linear")
+                {
+                    linearButton.Checked = true;
+                }
+                definitionTextBox.Text = WikiTable[currentItem, 3];
+
+            }
 
         }
 
-        private void linearButton_CheckedChanged(object sender, EventArgs e)
-        {
-            
-        }
 
         private void saveButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog savefile = new SaveFileDialog();
-            savefile.Filter = "txt files (*.txt)|*.txt";
+            savefile.InitialDirectory = @"C:\\temp\\";
+            savefile.Filter = "Binary File (*.bin)|*.bin";
             if (savefile.ShowDialog() == DialogResult.OK)
             {
                 string fileName = savefile.FileName;
                 using (BinaryWriter bw = new BinaryWriter(new FileStream(fileName, FileMode.Append)))
                 {
                     // Writing the dimensions of the array to the file
-                    bw.Write(WikiTable.GetLength(0));
-                    bw.Write(WikiTable.GetLength(1));
+                    //bw.Write(WikiTable.GetLength(0));
+                    //bw.Write(WikiTable.GetLength(1));
 
                     // Writing the data of the array to the file
-                    for (int i = 0; i < WikiTable.GetLength(0); i++)
+                    for (int i = 0; i < rowRef; i++)
                     {
-                        for (int j = 0; j < WikiTable.GetLength(1); j++)
+                        for (int j = 0; j < col; j++)
                         {
                             bw.Write(WikiTable[i, j]);
                         }
                     }
-                };
+                }
             }
         }
 
         private void loadButton_Click(object sender, EventArgs e)
         {
-
+            rowRef = 0;
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < col; j++)
+                {
+                    WikiTable[i, j] = "";
+                }
+            }
 
             using (OpenFileDialog openFile = new OpenFileDialog())
             {
-                openFile.InitialDirectory = "C:\\temp\\";
+                openFile.InitialDirectory = @"C:\\temp\\";
 
                 if (openFile.ShowDialog() == DialogResult.OK)
                 {
                     string openFileName = openFile.FileName;
                     BinaryReader br = new BinaryReader(new FileStream(openFileName, FileMode.Open));
 
+
+
                     for (int i = 0; i < row; i++)
                     {
-                        for (int j = 0; j < col; j++)
+                        try
                         {
-                            WikiTable[i, j] = br.ReadString();
+                            for (int j = 0; j < col; j++)
+                            {
+                                WikiTable[i, j] = br.ReadString();
+                            }
+                            rowRef++;
                         }
+                        catch (Exception)
+                        {
+                            break;
+                        }
+
                     }
                     br.Close();
+                    displayListView();
                 }
             }
         }
 
+        private void editButton_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = listViewDisplay.SelectedIndices[0];
 
+            if (selectedIndex > -1)
+            {
+
+                WikiTable[selectedIndex, 0] = dataStructureTextBox.Text;
+                WikiTable[selectedIndex, 1] = categoryTextBox.Text;
+                if (linearButton.Checked == true)
+                {
+                    WikiTable[selectedIndex, 2] = linearButton.Text;
+                }
+                if (nonLinearButton.Checked == true)
+                {
+                    WikiTable[selectedIndex, 2] = nonLinearButton.Text;
+                }
+                WikiTable[selectedIndex, 3] = definitionTextBox.Text;
+            
+            }
+            displayListView();
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = listViewDisplay.SelectedIndices[0];
+            if (selectedIndex > -1)
+            {
+
+                WikiTable[selectedIndex, 0] = "";
+                WikiTable[selectedIndex, 1] = "";
+                WikiTable[selectedIndex, 2] = "";
+                WikiTable[selectedIndex, 3] = "";
+                rowRef--;
+
+            }
+            displayListView();
+        }
+
+        private void dataStructureTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            clearDisplay();
+            dataStructureTextBox.Focus();
+        }
     }
 }

@@ -70,7 +70,7 @@
             this.editButton.TabIndex = 2;
             this.editButton.Text = "Edit";
             this.editButton.UseVisualStyleBackColor = true;
-
+            this.editButton.Click += new System.EventHandler(this.editButton_Click);
             // 
             // deleteButton
             // 
@@ -80,7 +80,7 @@
             this.deleteButton.TabIndex = 3;
             this.deleteButton.Text = "Delete";
             this.deleteButton.UseVisualStyleBackColor = true;
-
+            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
             // saveButton
             // 
@@ -108,6 +108,7 @@
             this.dataStructureTextBox.Name = "dataStructureTextBox";
             this.dataStructureTextBox.Size = new System.Drawing.Size(218, 20);
             this.dataStructureTextBox.TabIndex = 7;
+            this.dataStructureTextBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dataStructureTextBox_MouseDoubleClick);
             // 
             // searchTextBox
             // 
@@ -125,7 +126,6 @@
             this.searchButton.TabIndex = 9;
             this.searchButton.Text = "Search";
             this.searchButton.UseVisualStyleBackColor = true;
-
             // 
             // label1
             // 
@@ -188,7 +188,6 @@
             this.linearButton.TabStop = true;
             this.linearButton.Text = "Linear";
             this.linearButton.UseVisualStyleBackColor = true;
-            this.linearButton.CheckedChanged += new System.EventHandler(this.linearButton_CheckedChanged);
             // 
             // nonLinearButton
             // 
