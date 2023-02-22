@@ -25,8 +25,9 @@ namespace AT1WikiApplication
         static int row = 12;
         static int col = 4;
         private string[,] WikiTable = new string[row, col];
+        private int rowRef = 0;
 
-        private void DisplayListView()
+        private void displayListView()
         {
             listViewDisplay.Items.Clear();
             for (int x = 0; x < row ; x++)
@@ -37,6 +38,16 @@ namespace AT1WikiApplication
                 lvi.SubItems.Add(WikiTable[x, 3]);
                 listViewDisplay.Items.Add(lvi);
             }
+        }
+
+        private void clearDisplay()
+        {
+            dataStructureTextBox.Clear();
+            categoryTextBox.Clear();
+            linearButton.Checked = false;
+            nonLinearButton.Checked = false;
+            definitionTextBox.Clear();
+            searchTextBox.Clear();  
         }
     
 
@@ -75,7 +86,7 @@ namespace AT1WikiApplication
                     
                 }
             }
-            DisplayListView();
+            displayListView();
         }
 
         private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
@@ -86,6 +97,31 @@ namespace AT1WikiApplication
         private void linearButton_CheckedChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void loadButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void searchButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void editButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
