@@ -31,6 +31,7 @@ namespace AT1WikiApplication
         private string[,] WikiTable = new string[row, col];
         int rowRef = 0;
 
+        #region "Display List View"
         private void displayListView()
         {
             listViewDisplay.Items.Clear();
@@ -43,7 +44,7 @@ namespace AT1WikiApplication
                 lvi.SubItems.Add(WikiTable[x, 3]);
                 listViewDisplay.Items.Add(lvi);
             }
-            
+
         }
 
         private void clearDisplay()
@@ -55,7 +56,14 @@ namespace AT1WikiApplication
             definitionTextBox.Clear();
             searchTextBox.Clear();
         }
+        #endregion 
 
+        #region "Sort"
+        private void sortButton_Click(object sender, EventArgs e)
+        {
+            bubbleSort();
+            displayListView();
+        }
         private void bubbleSort()
         {
             for (int i = 0; i < row; i++)
@@ -73,7 +81,7 @@ namespace AT1WikiApplication
 
         private void swap(int i, int j)
         {
-            
+
             for (int k = 0; k < col; k++)
             {
                 string temp = WikiTable[i, k];
@@ -98,13 +106,9 @@ namespace AT1WikiApplication
                 return string.CompareOrdinal(a, b);
             }
         }
+        #endregion
 
-        private void sortButton_Click(object sender, EventArgs e)
-        {
-            bubbleSort();
-            displayListView();
-        }
-
+        #region "Add Button"
         private void addButton_Click(object sender, EventArgs e)
         {
             try
@@ -140,32 +144,9 @@ namespace AT1WikiApplication
             }
 
         }
+        #endregion
 
-        private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int currentItem; 
-
-            if (listViewDisplay.SelectedIndices.Count > 0) //ensure the selected indices will not turn to null for second click
-            {
-                currentItem = listViewDisplay.SelectedIndices[0];
-
-                dataStructureTextBox.Text = WikiTable[currentItem, 0];
-                categoryTextBox.Text = WikiTable[currentItem, 1];
-                if (WikiTable[currentItem, 2] == "Linear")
-                {
-                    linearButton.Checked = true;
-                }
-                if (WikiTable[currentItem, 2] == "Non-Linear")
-                {
-                    linearButton.Checked = true;
-                }
-                definitionTextBox.Text = WikiTable[currentItem, 3];
-
-            }
-
-        }
-
-
+        #region "Save File"
         private void saveButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog savefile = new SaveFileDialog();
@@ -194,13 +175,16 @@ namespace AT1WikiApplication
                             else
                             {
                                 bw.Write(WikiTable[i, j]);
-                            }}
+                            }
+                        }
 
                     }
                 }
             }
         }
+        #endregion
 
+        #region "Load File"
         private void loadButton_Click(object sender, EventArgs e)
         {
             rowRef = 0;
@@ -244,11 +228,13 @@ namespace AT1WikiApplication
                 }
             }
         }
+        #endregion
 
+        #region "Edit Button"
         private void editButton_Click(object sender, EventArgs e)
         {
-            
-            
+
+
             int selectedIndex = listViewDisplay.SelectedIndices[0];
 
             if (selectedIndex > -1)
@@ -265,15 +251,17 @@ namespace AT1WikiApplication
                     WikiTable[selectedIndex, 2] = nonLinearButton.Text;
                 }
                 WikiTable[selectedIndex, 3] = definitionTextBox.Text;
-            
+
             }
             displayListView();
         }
+        #endregion
 
+        #region "Delete Button"
         private void deleteButton_Click(object sender, EventArgs e)
         {
-           
-            
+
+
             int selectedIndex = listViewDisplay.SelectedIndices[0];
             if (selectedIndex > -1)
             {
@@ -287,13 +275,71 @@ namespace AT1WikiApplication
             }
             displayListView();
         }
+        #endregion
 
+        #region "Event"
         private void dataStructureTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             clearDisplay();
             dataStructureTextBox.Focus();
         }
 
+        private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
+
+            if (listViewDisplay.SelectedIndices.Count > 0) //ensure the selected indices will not turn to null for second click
+            {
+                int currentItem = listViewDisplay.SelectedIndices[0];
+
+                focusTextBox(currentItem);
+            }
+
+        }
+        #endregion
+
+        #region "Search Button"
+        private void searchButton_Click(object sender, EventArgs e)
+        {
+            bool isFound = false;
+            string target = searchTextBox.Text.ToLower();
+
+            for (int i = 0; i < row; i++)
+            {
+                if (target == WikiTable[i, 0].ToLower())
+                {
+                    listViewDisplay.Focus();
+                    listViewDisplay.Items[i].Selected = true;
+                    focusTextBox(i);
+                    isFound = true;
+                    MessageBox.Show("found");
+                    return;
+                }
+            }
+            if (!isFound)
+            {
+                MessageBox.Show("\""+ searchTextBox.Text + "\" is not found. Please try again!");     
+            }
+        }
+        #endregion
+
+        #region "Common Method"
+        private void focusTextBox(int indexI)
+        {
+            dataStructureTextBox.Text = WikiTable[indexI, 0];
+            categoryTextBox.Text = WikiTable[indexI, 1];
+            if (WikiTable[indexI, 2] == "Linear")
+            {
+                linearButton.Checked = true;
+            }
+            if (WikiTable[indexI, 2] == "Non-Linear")
+            {
+                linearButton.Checked = true;
+            }
+            definitionTextBox.Text = WikiTable[indexI, 3];
+        }
+
+
+        #endregion
     }
 }
