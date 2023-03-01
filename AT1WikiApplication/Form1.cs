@@ -31,7 +31,7 @@ namespace AT1WikiApplication
         private string[,] WikiTable = new string[row, col];
         int rowRef = 0;
 
-        #region "Display List View"
+        #region "Display ListView"
         private void displayListView()
         {
             listViewDisplay.Items.Clear();
@@ -233,93 +233,111 @@ namespace AT1WikiApplication
         #region "Edit Button"
         private void editButton_Click(object sender, EventArgs e)
         {
-
-
-            int selectedIndex = listViewDisplay.SelectedIndices[0];
-
-            if (selectedIndex > -1)
+            if (listViewDisplay.SelectedIndices.Count > 0)
             {
+                int selectedIndex = listViewDisplay.SelectedIndices[0];
+                var confirmResult = MessageBox.Show("Do you want to edit this record?", "Confirm Edit!", MessageBoxButtons.YesNo);
 
-                WikiTable[selectedIndex, 0] = dataStructureTextBox.Text;
-                WikiTable[selectedIndex, 1] = categoryTextBox.Text;
-                if (linearButton.Checked == true)
+                if (confirmResult == DialogResult.Yes)
                 {
-                    WikiTable[selectedIndex, 2] = linearButton.Text;
-                }
-                if (nonLinearButton.Checked == true)
-                {
-                    WikiTable[selectedIndex, 2] = nonLinearButton.Text;
-                }
-                WikiTable[selectedIndex, 3] = definitionTextBox.Text;
+                    if (selectedIndex > -1)
+                    {
 
-            }
-            displayListView();
+                        WikiTable[selectedIndex, 0] = dataStructureTextBox.Text;
+                        WikiTable[selectedIndex, 1] = categoryTextBox.Text;
+                        if (linearButton.Checked == true)
+                        {
+                            WikiTable[selectedIndex, 2] = linearButton.Text;
+                        }
+                        if (nonLinearButton.Checked == true)
+                        {
+                            WikiTable[selectedIndex, 2] = nonLinearButton.Text;
+                        }
+                        WikiTable[selectedIndex, 3] = definitionTextBox.Text;
+
+                    }
+                    displayListView();
+                }
+            }                        
         }
         #endregion
 
         #region "Delete Button"
         private void deleteButton_Click(object sender, EventArgs e)
         {
-
-
             int selectedIndex = listViewDisplay.SelectedIndices[0];
-            if (selectedIndex > -1)
+            var confirmResult = MessageBox.Show("Do you want to edit this record?", "Confirm Edit!", MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
             {
+                if (selectedIndex > -1)
+                {
 
-                WikiTable[selectedIndex, 0] = "";
-                WikiTable[selectedIndex, 1] = "";
-                WikiTable[selectedIndex, 2] = "";
-                WikiTable[selectedIndex, 3] = "";
-                rowRef--;
+                    WikiTable[selectedIndex, 0] = "";
+                    WikiTable[selectedIndex, 1] = "";
+                    WikiTable[selectedIndex, 2] = "";
+                    WikiTable[selectedIndex, 3] = "";
+                    rowRef--;
 
+                }
+                displayListView();
             }
-            displayListView();
         }
         #endregion
 
-        #region "Event"
-        private void dataStructureTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            clearDisplay();
-            dataStructureTextBox.Focus();
-        }
-
-        private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-
-            if (listViewDisplay.SelectedIndices.Count > 0) //ensure the selected indices will not turn to null for second click
-            {
-                int currentItem = listViewDisplay.SelectedIndices[0];
-
-                focusTextBox(currentItem);
-            }
-
-        }
-        #endregion
-
-        #region "Search Button"
+        #region "Binary Search Button"
         private void searchButton_Click(object sender, EventArgs e)
         {
-            bool isFound = false;
+            listViewDisplay.SelectedIndices.Clear();
+            int low = 0;
+            int high = row -1;
+            int mid = 0;
             string target = searchTextBox.Text.ToLower();
 
-            for (int i = 0; i < row; i++)
+            while (low <= high)
             {
-                if (target == WikiTable[i, 0].ToLower())
+                mid = (high + low) / 2;
+
+                if (target == WikiTable[mid, 0].ToLower())
                 {
                     listViewDisplay.Focus();
-                    listViewDisplay.Items[i].Selected = true;
-                    focusTextBox(i);
-                    isFound = true;
-                    MessageBox.Show("found");
-                    return;
+                    listViewDisplay.Items[mid].Selected = true;
+                    focusTextBox(mid);
+                    MessageBox.Show("\"" + searchTextBox.Text + "\" is found.");
+                    return;                    
+                }
+                else if (string.CompareOrdinal(WikiTable[mid, 0].ToLower(), target) > 0)
+                {
+                    high = mid - 1;
+                }
+                else
+                {
+                    low = mid + 1;
                 }
             }
-            if (!isFound)
-            {
-                MessageBox.Show("\""+ searchTextBox.Text + "\" is not found. Please try again!");     
-            }
+            MessageBox.Show("\"" + target + "\" is not found. Please try again!");
+            searchTextBox.Clear();
+
+            //Linear Search
+            //bool isFound = false;
+            //string target = searchTextBox.Text.ToLower();
+
+            //for (int i = 0; i < row; i++)
+            //{
+            //    if (target == WikiTable[i, 0].ToLower())
+            //    {
+            //listViewDisplay.Focus();
+            //listViewDisplay.Items[i].Selected = true;
+            //focusTextBox(i);
+            //isFound = true;
+            //MessageBox.Show("\"" + searchTextBox.Text + "\" is found.");
+            //return;
+            //    }
+            //}
+            //if (!isFound)
+            //{
+            //    MessageBox.Show("\""+ searchTextBox.Text + "\" is not found. Please try again!");     
+            //}
         }
         #endregion
 
@@ -334,12 +352,50 @@ namespace AT1WikiApplication
             }
             if (WikiTable[indexI, 2] == "Non-Linear")
             {
-                linearButton.Checked = true;
+                nonLinearButton.Checked = true;
             }
             definitionTextBox.Text = WikiTable[indexI, 3];
         }
 
 
+        #endregion
+
+        #region "Event"
+        private void dataStructureTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            clearDisplay();
+            dataStructureTextBox.Focus();
+        }
+
+        private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            clearDisplay();
+            if (listViewDisplay.SelectedIndices.Count > 0) //ensure the selected indices will not turn to null for second click
+            {
+                int currentItem = listViewDisplay.SelectedIndices[0];
+
+                focusTextBox(currentItem);
+            }
+        }
+        private void searchTextBox_Enter(object sender, EventArgs e)
+        {
+            if (searchTextBox.Text == "Search Structure Name")
+            {
+                searchTextBox.Text = "";
+
+                searchTextBox.ForeColor = Color.Black;
+            }
+        }
+
+        private void searchTextBox_Leave(object sender, EventArgs e)
+        {
+            if (searchTextBox.Text == "")
+            {
+                searchTextBox.Text = "Search Structure Name";
+
+                searchTextBox.ForeColor = Color.Silver;
+            }
+        }
         #endregion
     }
 }

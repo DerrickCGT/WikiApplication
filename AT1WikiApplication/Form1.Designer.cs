@@ -113,11 +113,14 @@
             // 
             // searchTextBox
             // 
+            this.searchTextBox.ForeColor = System.Drawing.SystemColors.ButtonShadow;
             this.searchTextBox.Location = new System.Drawing.Point(427, 129);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(217, 20);
             this.searchTextBox.TabIndex = 8;
-            this.searchTextBox.Text = "Input Search";
+            this.searchTextBox.Text = "Search Structure Name";
+            this.searchTextBox.Enter += new System.EventHandler(this.searchTextBox_Enter);
+            this.searchTextBox.Leave += new System.EventHandler(this.searchTextBox_Leave);
             // 
             // searchButton
             // 
