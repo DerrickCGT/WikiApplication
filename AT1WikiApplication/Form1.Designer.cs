@@ -50,6 +50,7 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.sortButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // addButton
@@ -84,7 +85,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(60, 45);
+            this.saveButton.Location = new System.Drawing.Point(46, 45);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 5;
@@ -94,7 +95,7 @@
             // 
             // loadButton
             // 
-            this.loadButton.Location = new System.Drawing.Point(199, 45);
+            this.loadButton.Location = new System.Drawing.Point(177, 45);
             this.loadButton.Name = "loadButton";
             this.loadButton.Size = new System.Drawing.Size(75, 23);
             this.loadButton.TabIndex = 6;
@@ -224,11 +225,22 @@
             this.listViewDisplay.View = System.Windows.Forms.View.Details;
             this.listViewDisplay.SelectedIndexChanged += new System.EventHandler(this.listViewDisplay_SelectedIndexChanged);
             // 
+            // sortButton
+            // 
+            this.sortButton.Location = new System.Drawing.Point(303, 45);
+            this.sortButton.Name = "sortButton";
+            this.sortButton.Size = new System.Drawing.Size(75, 23);
+            this.sortButton.TabIndex = 21;
+            this.sortButton.Text = "Sort";
+            this.sortButton.UseVisualStyleBackColor = true;
+            this.sortButton.Click += new System.EventHandler(this.sortButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(806, 456);
+            this.Controls.Add(this.sortButton);
             this.Controls.Add(this.listViewDisplay);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.nonLinearButton);
@@ -277,6 +289,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.Button sortButton;
     }
 }
 

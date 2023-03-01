@@ -33,7 +33,6 @@ namespace AT1WikiApplication
 
         private void displayListView()
         {
-            bubbleSort();
             listViewDisplay.Items.Clear();
 
             for (int x = 0; x < row; x++)
@@ -63,7 +62,8 @@ namespace AT1WikiApplication
             {
                 for (int j = i + 1; j < row; j++)
                 {
-                    if (string.Compare(WikiTable[i, 0], WikiTable[j, 0]) > 0)
+
+                    if (compareSpecialString(WikiTable[i, 0], WikiTable[j, 0]) > 0)
                     {
                         swap(i, j);
                     }
@@ -73,14 +73,36 @@ namespace AT1WikiApplication
 
         private void swap(int i, int j)
         {
-            string temp;
+            
             for (int k = 0; k < col; k++)
             {
-                temp = WikiTable[i, k];
+                string temp = WikiTable[i, k];
                 WikiTable[i, k] = WikiTable[j, k];
                 WikiTable[j, k] = temp;
 
             }
+        }
+
+        private int compareSpecialString(string a, string b)
+        {
+            if (string.IsNullOrEmpty(a))
+            {
+                return 1;
+            }
+            else if (string.IsNullOrEmpty(b))
+            {
+                return -1;
+            }
+            else
+            {
+                return string.CompareOrdinal(a, b);
+            }
+        }
+
+        private void sortButton_Click(object sender, EventArgs e)
+        {
+            bubbleSort();
+            displayListView();
         }
 
         private void addButton_Click(object sender, EventArgs e)
@@ -161,10 +183,19 @@ namespace AT1WikiApplication
                     // Writing the data of the array to the file
                     for (int i = 0; i < rowRef; i++)
                     {
+
                         for (int j = 0; j < col; j++)
                         {
-                            bw.Write(WikiTable[i, j]);
-                        }
+
+                            if (string.IsNullOrEmpty(WikiTable[i, j]))
+                            {
+                                bw.Write("");
+                            }
+                            else
+                            {
+                                bw.Write(WikiTable[i, j]);
+                            }}
+
                     }
                 }
             }
@@ -216,6 +247,8 @@ namespace AT1WikiApplication
 
         private void editButton_Click(object sender, EventArgs e)
         {
+            
+            
             int selectedIndex = listViewDisplay.SelectedIndices[0];
 
             if (selectedIndex > -1)
@@ -239,6 +272,8 @@ namespace AT1WikiApplication
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
+           
+            
             int selectedIndex = listViewDisplay.SelectedIndices[0];
             if (selectedIndex > -1)
             {
@@ -258,5 +293,7 @@ namespace AT1WikiApplication
             clearDisplay();
             dataStructureTextBox.Focus();
         }
+
+
     }
 }
