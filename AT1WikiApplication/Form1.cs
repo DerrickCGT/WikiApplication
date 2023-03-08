@@ -14,8 +14,8 @@ using System.Windows.Forms;
 
 // Name: Derrick Choong
 // Application: Wiki form to provide data structure definitions and categories.
-// version 1.0.1
-// Remarks: still struggling on add button and seem to have duplication
+// version 1.4
+// Remarks: Final Completion and Code Comment in progress
 
 namespace AT1WikiApplication
 {
@@ -26,12 +26,17 @@ namespace AT1WikiApplication
             InitializeComponent();
         }
 
+        //Define the size of two dimensional string array: WikiTable of 12 rows and 4 columns
         static int row = 12;
         static int col = 4;
         private string[,] WikiTable = new string[row, col];
+        //Reference pointer to current row index
         int rowRef = 0;
 
-        #region "Display ListView"
+
+
+        #region "Data Display"
+        //Method to display data in Listview
         private void displayListView()
         {
             listViewDisplay.Items.Clear();
@@ -40,13 +45,13 @@ namespace AT1WikiApplication
             {
                 ListViewItem lvi = new ListViewItem(WikiTable[x, 0]);
                 lvi.SubItems.Add(WikiTable[x, 1]);
-                lvi.SubItems.Add(WikiTable[x, 2]);
-                lvi.SubItems.Add(WikiTable[x, 3]);
+                
                 listViewDisplay.Items.Add(lvi);
             }
 
         }
 
+        //Method to clear data in all textboxes and radiobuttons
         private void clearDisplay()
         {
             dataStructureTextBox.Clear();
@@ -56,13 +61,40 @@ namespace AT1WikiApplication
             definitionTextBox.Clear();
             searchTextBox.Clear();
         }
+
+        //Method to display all text in the textboxes and radiobutton when record index is selected
+        private void focusTextBox(int indexI)
+        {
+            dataStructureTextBox.Text = WikiTable[indexI, 0];
+            categoryTextBox.Text = WikiTable[indexI, 1];
+            if (WikiTable[indexI, 2] == "Linear")
+            {
+                linearButton.Checked = true;
+            }
+            if (WikiTable[indexI, 2] == "Non-Linear")
+            {
+                nonLinearButton.Checked = true;
+            }
+            definitionTextBox.Text = WikiTable[indexI, 3];
+        }
+
+        //Method to clear status strip
+        private void clearStatusStrip()
+        {
+            statusLabel1.Text = "";
+            statusLabel1.BackColor = Color.White;
+        }
         #endregion 
 
         #region "Sort"
+        //Bubble sort algorithm to sort WikiTable by name ascending
         private void sortButton_Click(object sender, EventArgs e)
         {
+            clearStatusStrip();
             bubbleSort();
             displayListView();
+            statusLabel1.Text = "Data Sorted";
+            statusLabel1.BackColor = Color.Green;
         }
         private void bubbleSort()
         {
@@ -79,6 +111,7 @@ namespace AT1WikiApplication
             }
         }
 
+        //Method to swap row i and j to perform bubble sort
         private void swap(int i, int j)
         {
 
@@ -91,8 +124,10 @@ namespace AT1WikiApplication
             }
         }
 
+        //Method to compare and sort null or empty row, ensure NullorEmpty row sorted to bottom
         private int compareSpecialString(string a, string b)
         {
+
             if (string.IsNullOrEmpty(a))
             {
                 return 1;
@@ -103,16 +138,20 @@ namespace AT1WikiApplication
             }
             else
             {
-                return string.CompareOrdinal(a, b);
+                return string.CompareOrdinal(a.ToLower(), b.ToLower());
             }
         }
         #endregion
 
         #region "Add Button"
+        //Add record to WikiTable
         private void addButton_Click(object sender, EventArgs e)
         {
+            clearStatusStrip();
+            //If the WikiTable is full with rowRef as row indexes < 12
             try
-            {
+            {   
+                //If an input is given
                 if (!string.IsNullOrEmpty(dataStructureTextBox.Text))
                 {
                     WikiTable[rowRef, 0] = dataStructureTextBox.Text;
@@ -137,18 +176,89 @@ namespace AT1WikiApplication
                 }
                 displayListView();
                 clearDisplay();
+                statusLabel1.Text = "Record Added";
+                statusLabel1.BackColor = Color.Green;
             }
             catch (Exception)
             {
                 MessageBox.Show("Sorry! WikiTable is full and no new data added.");
+                statusLabel1.Text = "Error! Record Full";
+                statusLabel1.BackColor = Color.Red;
             }
 
         }
         #endregion
 
+        #region "Edit Button"
+        //Modifies a record with user input
+        private void editButton_Click(object sender, EventArgs e)
+        {
+            clearStatusStrip();
+            //Event based trigger and ensure the selected indices is always more than 0
+            //ensure the selected indices will not turn to null for second click
+            if (listViewDisplay.SelectedIndices.Count > 0)
+            {
+                int selectedIndex = listViewDisplay.SelectedIndices[0];
+                var confirmResult = MessageBox.Show("Do you want to edit this record?", "Confirmation of Edit", MessageBoxButtons.YesNo);
+
+                if (confirmResult == DialogResult.Yes)
+                {
+                    if (selectedIndex > -1)
+                    {
+
+                        WikiTable[selectedIndex, 0] = dataStructureTextBox.Text;
+                        WikiTable[selectedIndex, 1] = categoryTextBox.Text;
+                        if (linearButton.Checked == true)
+                        {
+                            WikiTable[selectedIndex, 2] = linearButton.Text;
+                        }
+                        if (nonLinearButton.Checked == true)
+                        {
+                            WikiTable[selectedIndex, 2] = nonLinearButton.Text;
+                        }
+                        WikiTable[selectedIndex, 3] = definitionTextBox.Text;
+
+                    }
+                    displayListView();
+                    statusLabel1.Text = "Record Edited";
+                    statusLabel1.BackColor = Color.Green;
+                }
+            }                        
+        }
+        #endregion
+
+        #region "Delete Button"
+        //Delete selected record from WikiTable
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            clearStatusStrip();
+            int selectedIndex = listViewDisplay.SelectedIndices[0];
+            var confirmResult = MessageBox.Show("Do you want to edit this record?", "Confirm Edit!", MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                if (selectedIndex > -1)
+                {
+
+                    WikiTable[selectedIndex, 0] = "";
+                    WikiTable[selectedIndex, 1] = "";
+                    WikiTable[selectedIndex, 2] = "";
+                    WikiTable[selectedIndex, 3] = "";
+                    rowRef--;
+
+                }
+                displayListView();
+                statusLabel1.Text = "Record Deleted";
+                statusLabel1.BackColor = Color.Green;
+            }
+        }
+        #endregion
+
         #region "Save File"
+        //Save all records to binary file
         private void saveButton_Click(object sender, EventArgs e)
         {
+            clearStatusStrip();
             SaveFileDialog savefile = new SaveFileDialog();
             savefile.InitialDirectory = @"C:\\temp\\";
             savefile.Filter = "Binary File (*.bin)|*.bin";
@@ -157,11 +267,7 @@ namespace AT1WikiApplication
                 string fileName = savefile.FileName;
                 using (BinaryWriter bw = new BinaryWriter(new FileStream(fileName, FileMode.Append)))
                 {
-                    // Writing the dimensions of the array to the file
-                    //bw.Write(WikiTable.GetLength(0));
-                    //bw.Write(WikiTable.GetLength(1));
 
-                    // Writing the data of the array to the file
                     for (int i = 0; i < rowRef; i++)
                     {
 
@@ -176,17 +282,23 @@ namespace AT1WikiApplication
                             {
                                 bw.Write(WikiTable[i, j]);
                             }
+
                         }
 
                     }
+                    statusLabel1.Text = "File Saved";
+                    statusLabel1.BackColor = Color.Green;
                 }
             }
         }
         #endregion
 
         #region "Load File"
+        //Load file to add all records to WikiTable
         private void loadButton_Click(object sender, EventArgs e)
         {
+            clearStatusStrip();
+            //Renew rowRef as new file is initiated and empty WikiTable
             rowRef = 0;
             for (int i = 0; i < row; i++)
             {
@@ -209,6 +321,7 @@ namespace AT1WikiApplication
 
                     for (int i = 0; i < row; i++)
                     {
+                        //If WikiTable is full, rowRef less than 12
                         try
                         {
                             for (int j = 0; j < col; j++)
@@ -219,10 +332,13 @@ namespace AT1WikiApplication
                         }
                         catch (Exception)
                         {
+
                             break;
                         }
 
                     }
+                    statusLabel1.Text = "File Loaded";
+                    statusLabel1.BackColor = Color.Green;
                     br.Close();
                     displayListView();
                 }
@@ -230,163 +346,109 @@ namespace AT1WikiApplication
         }
         #endregion
 
-        #region "Edit Button"
-        private void editButton_Click(object sender, EventArgs e)
-        {
-            if (listViewDisplay.SelectedIndices.Count > 0)
-            {
-                int selectedIndex = listViewDisplay.SelectedIndices[0];
-                var confirmResult = MessageBox.Show("Do you want to edit this record?", "Confirm Edit!", MessageBoxButtons.YesNo);
-
-                if (confirmResult == DialogResult.Yes)
-                {
-                    if (selectedIndex > -1)
-                    {
-
-                        WikiTable[selectedIndex, 0] = dataStructureTextBox.Text;
-                        WikiTable[selectedIndex, 1] = categoryTextBox.Text;
-                        if (linearButton.Checked == true)
-                        {
-                            WikiTable[selectedIndex, 2] = linearButton.Text;
-                        }
-                        if (nonLinearButton.Checked == true)
-                        {
-                            WikiTable[selectedIndex, 2] = nonLinearButton.Text;
-                        }
-                        WikiTable[selectedIndex, 3] = definitionTextBox.Text;
-
-                    }
-                    displayListView();
-                }
-            }                        
-        }
-        #endregion
-
-        #region "Delete Button"
-        private void deleteButton_Click(object sender, EventArgs e)
-        {
-            int selectedIndex = listViewDisplay.SelectedIndices[0];
-            var confirmResult = MessageBox.Show("Do you want to edit this record?", "Confirm Edit!", MessageBoxButtons.YesNo);
-
-            if (confirmResult == DialogResult.Yes)
-            {
-                if (selectedIndex > -1)
-                {
-
-                    WikiTable[selectedIndex, 0] = "";
-                    WikiTable[selectedIndex, 1] = "";
-                    WikiTable[selectedIndex, 2] = "";
-                    WikiTable[selectedIndex, 3] = "";
-                    rowRef--;
-
-                }
-                displayListView();
-            }
-        }
-        #endregion
-
         #region "Binary Search Button"
+        //Searches for a given target name within the array using binary search algorithm
         private void searchButton_Click(object sender, EventArgs e)
         {
-            listViewDisplay.SelectedIndices.Clear();
+            clearStatusStrip();
+            //Upper and lower bound for binary search
             int low = 0;
-            int high = row -1;
+            int high = rowRef -1;
             int mid = 0;
             string target = searchTextBox.Text.ToLower();
+            bool isFound = false;
 
-            while (low <= high)
+            //Perform binary search
+            if (!string.IsNullOrEmpty(searchTextBox.Text))
             {
-                mid = (high + low) / 2;
+                while (low <= high)
+                {
+                    mid = (high + low) / 2;
 
-                if (target == WikiTable[mid, 0].ToLower())
+                    //Target found
+                    if (target == WikiTable[mid, 0].ToLower() &&  (listViewDisplay.SelectedIndices.Count > 0))
+                    {
+                        isFound = true;
+                        statusLabel1.Text = "Record Found";
+                        statusLabel1.BackColor = Color.Green;
+                        break;
+                    }
+                    else if (string.CompareOrdinal(WikiTable[mid, 0].ToLower(), target) > 0)
+                    {
+                        high = mid - 1;
+                    }
+                    else
+                    {
+                        low = mid + 1;
+                    }
+                }
+                if (isFound)
                 {
                     listViewDisplay.Focus();
                     listViewDisplay.Items[mid].Selected = true;
                     focusTextBox(mid);
-                    MessageBox.Show("\"" + searchTextBox.Text + "\" is found.");
-                    return;                    
-                }
-                else if (string.CompareOrdinal(WikiTable[mid, 0].ToLower(), target) > 0)
-                {
-                    high = mid - 1;
+                    MessageBox.Show("\"" + WikiTable[mid, 0] + "\" is found.");
                 }
                 else
                 {
-                    low = mid + 1;
+                    MessageBox.Show("\"" + target + "\" is not found. Please try again!");
+                    statusLabel1.Text = "Record Not Found";
+                    statusLabel1.BackColor = Color.Red;
+                    searchTextBox.Clear();
                 }
+
             }
-            MessageBox.Show("\"" + target + "\" is not found. Please try again!");
-            searchTextBox.Clear();
-
-            //Linear Search
-            //bool isFound = false;
-            //string target = searchTextBox.Text.ToLower();
-
-            //for (int i = 0; i < row; i++)
-            //{
-            //    if (target == WikiTable[i, 0].ToLower())
-            //    {
-            //listViewDisplay.Focus();
-            //listViewDisplay.Items[i].Selected = true;
-            //focusTextBox(i);
-            //isFound = true;
-            //MessageBox.Show("\"" + searchTextBox.Text + "\" is found.");
-            //return;
-            //    }
-            //}
-            //if (!isFound)
-            //{
-            //    MessageBox.Show("\""+ searchTextBox.Text + "\" is not found. Please try again!");     
-            //}
-        }
-        #endregion
-
-        #region "Common Method"
-        private void focusTextBox(int indexI)
-        {
-            dataStructureTextBox.Text = WikiTable[indexI, 0];
-            categoryTextBox.Text = WikiTable[indexI, 1];
-            if (WikiTable[indexI, 2] == "Linear")
+            else
             {
-                linearButton.Checked = true;
+                MessageBox.Show("Null Input. Please try again!");
+                statusLabel1.Text = "Error!";
+                statusLabel1.BackColor = Color.Red;
+                searchTextBox.Clear();
             }
-            if (WikiTable[indexI, 2] == "Non-Linear")
-            {
-                nonLinearButton.Checked = true;
-            }
-            definitionTextBox.Text = WikiTable[indexI, 3];
+
         }
-
-
         #endregion
 
         #region "Event"
+        //Event based method
+        //Clear all display when data structure text box is double mouse clicked
         private void dataStructureTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            
             clearDisplay();
             dataStructureTextBox.Focus();
+            statusLabel1.Text = "Display Clear";
+            statusLabel1.BackColor = Color.Green;
         }
 
+        //Display data when a record is selected on ListView
         private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
             clearDisplay();
-            if (listViewDisplay.SelectedIndices.Count > 0) //ensure the selected indices will not turn to null for second click
+            //ensure the selected indices will not turn to null for second click
+            if (listViewDisplay.SelectedIndices.Count > 0) 
             {
                 int currentItem = listViewDisplay.SelectedIndices[0];
 
                 focusTextBox(currentItem);
             }
         }
+
+        //Set PlaceHolder text in searchTextBox
+        //Clear the text in searchTextBox when user tries to input
         private void searchTextBox_Enter(object sender, EventArgs e)
         {
             if (searchTextBox.Text == "Search Structure Name")
             {
                 searchTextBox.Text = "";
+                
 
                 searchTextBox.ForeColor = Color.Black;
             }
         }
 
+        //Set PlaceHolder text in searchTextBox
+        //Input PlaceHolder text searchTextBox when user exits
         private void searchTextBox_Leave(object sender, EventArgs e)
         {
             if (searchTextBox.Text == "")
@@ -397,5 +459,10 @@ namespace AT1WikiApplication
             }
         }
         #endregion
+
+        private void searchTextBox_Click(object sender, EventArgs e)
+        {
+            listViewDisplay.SelectedIndices.Clear();
+        }
     }
 }

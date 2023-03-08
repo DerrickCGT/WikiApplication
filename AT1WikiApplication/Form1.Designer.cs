@@ -48,16 +48,22 @@
             this.listViewDisplay = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.sortButton = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.statusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // addButton
             // 
-            this.addButton.Location = new System.Drawing.Point(427, 87);
+            this.addButton.Location = new System.Drawing.Point(6, 16);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(75, 23);
+            this.addButton.Size = new System.Drawing.Size(63, 23);
             this.addButton.TabIndex = 1;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
@@ -65,9 +71,9 @@
             // 
             // editButton
             // 
-            this.editButton.Location = new System.Drawing.Point(549, 87);
+            this.editButton.Location = new System.Drawing.Point(105, 16);
             this.editButton.Name = "editButton";
-            this.editButton.Size = new System.Drawing.Size(75, 23);
+            this.editButton.Size = new System.Drawing.Size(63, 23);
             this.editButton.TabIndex = 2;
             this.editButton.Text = "Edit";
             this.editButton.UseVisualStyleBackColor = true;
@@ -75,9 +81,9 @@
             // 
             // deleteButton
             // 
-            this.deleteButton.Location = new System.Drawing.Point(669, 86);
+            this.deleteButton.Location = new System.Drawing.Point(209, 16);
             this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(75, 23);
+            this.deleteButton.Size = new System.Drawing.Size(63, 23);
             this.deleteButton.TabIndex = 3;
             this.deleteButton.Text = "Delete";
             this.deleteButton.UseVisualStyleBackColor = true;
@@ -85,9 +91,9 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(46, 45);
+            this.saveButton.Location = new System.Drawing.Point(28, 16);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.Size = new System.Drawing.Size(63, 23);
             this.saveButton.TabIndex = 5;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -95,9 +101,9 @@
             // 
             // loadButton
             // 
-            this.loadButton.Location = new System.Drawing.Point(177, 45);
+            this.loadButton.Location = new System.Drawing.Point(130, 16);
             this.loadButton.Name = "loadButton";
-            this.loadButton.Size = new System.Drawing.Size(75, 23);
+            this.loadButton.Size = new System.Drawing.Size(63, 23);
             this.loadButton.TabIndex = 6;
             this.loadButton.Text = "Load";
             this.loadButton.UseVisualStyleBackColor = true;
@@ -114,19 +120,20 @@
             // searchTextBox
             // 
             this.searchTextBox.ForeColor = System.Drawing.SystemColors.ButtonShadow;
-            this.searchTextBox.Location = new System.Drawing.Point(427, 129);
+            this.searchTextBox.Location = new System.Drawing.Point(6, 48);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(217, 20);
+            this.searchTextBox.Size = new System.Drawing.Size(205, 20);
             this.searchTextBox.TabIndex = 8;
             this.searchTextBox.Text = "Search Structure Name";
+            this.searchTextBox.Click += new System.EventHandler(this.searchTextBox_Click);
             this.searchTextBox.Enter += new System.EventHandler(this.searchTextBox_Enter);
             this.searchTextBox.Leave += new System.EventHandler(this.searchTextBox_Leave);
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(670, 127);
+            this.searchButton.Location = new System.Drawing.Point(130, 19);
             this.searchButton.Name = "searchButton";
-            this.searchButton.Size = new System.Drawing.Size(75, 23);
+            this.searchButton.Size = new System.Drawing.Size(63, 23);
             this.searchButton.TabIndex = 9;
             this.searchButton.Text = "Search";
             this.searchButton.UseVisualStyleBackColor = true;
@@ -207,9 +214,11 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 434);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 436);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(806, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(655, 22);
             this.statusStrip1.TabIndex = 19;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -217,34 +226,84 @@
             // 
             this.listViewDisplay.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
+            this.columnHeader2});
             this.listViewDisplay.HideSelection = false;
-            this.listViewDisplay.Location = new System.Drawing.Point(427, 174);
+            this.listViewDisplay.Location = new System.Drawing.Point(408, 166);
             this.listViewDisplay.Name = "listViewDisplay";
-            this.listViewDisplay.Size = new System.Drawing.Size(317, 243);
+            this.listViewDisplay.Size = new System.Drawing.Size(217, 251);
             this.listViewDisplay.TabIndex = 20;
             this.listViewDisplay.UseCompatibleStateImageBehavior = false;
             this.listViewDisplay.View = System.Windows.Forms.View.Details;
             this.listViewDisplay.SelectedIndexChanged += new System.EventHandler(this.listViewDisplay_SelectedIndexChanged);
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 120;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Category";
+            this.columnHeader2.Width = 92;
+            // 
             // sortButton
             // 
-            this.sortButton.Location = new System.Drawing.Point(303, 45);
+            this.sortButton.Location = new System.Drawing.Point(28, 19);
             this.sortButton.Name = "sortButton";
-            this.sortButton.Size = new System.Drawing.Size(75, 23);
+            this.sortButton.Size = new System.Drawing.Size(63, 23);
             this.sortButton.TabIndex = 21;
             this.sortButton.Text = "Sort";
             this.sortButton.UseVisualStyleBackColor = true;
             this.sortButton.Click += new System.EventHandler(this.sortButton_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.saveButton);
+            this.groupBox1.Controls.Add(this.loadButton);
+            this.groupBox1.Location = new System.Drawing.Point(402, 38);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(217, 45);
+            this.groupBox1.TabIndex = 22;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "File";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.searchTextBox);
+            this.groupBox2.Controls.Add(this.searchButton);
+            this.groupBox2.Controls.Add(this.sortButton);
+            this.groupBox2.Location = new System.Drawing.Point(402, 89);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(217, 71);
+            this.groupBox2.TabIndex = 23;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Search";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.addButton);
+            this.groupBox3.Controls.Add(this.editButton);
+            this.groupBox3.Controls.Add(this.deleteButton);
+            this.groupBox3.Location = new System.Drawing.Point(46, 38);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(299, 45);
+            this.groupBox3.TabIndex = 24;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Action";
+            // 
+            // statusLabel1
+            // 
+            this.statusLabel1.Name = "statusLabel1";
+            this.statusLabel1.Size = new System.Drawing.Size(0, 17);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(806, 456);
-            this.Controls.Add(this.sortButton);
+            this.ClientSize = new System.Drawing.Size(655, 458);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.listViewDisplay);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.nonLinearButton);
@@ -255,16 +314,15 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.searchButton);
-            this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.dataStructureTextBox);
-            this.Controls.Add(this.loadButton);
-            this.Controls.Add(this.saveButton);
-            this.Controls.Add(this.deleteButton);
-            this.Controls.Add(this.editButton);
-            this.Controls.Add(this.addButton);
             this.Name = "Form1";
             this.Text = "Wiki Application";
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -291,9 +349,11 @@
         private System.Windows.Forms.ListView listViewDisplay;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Button sortButton;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel1;
     }
 }
 
