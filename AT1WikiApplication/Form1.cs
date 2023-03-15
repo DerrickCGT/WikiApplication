@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 // Name: Derrick Choong
+// Student ID: 30066568
 // Application: Wiki form to provide data structure definitions and categories.
 // version 1.4
 // Remarks: Final Completion and Code Comment in progress
@@ -33,9 +34,7 @@ namespace AT1WikiApplication
         //Reference pointer to current row index
         int rowRef = 0;
 
-
-
-        #region "Data Display"
+        #region "Display Method"
         //Method to display data in Listview
         private void displayListView()
         {
@@ -171,7 +170,11 @@ namespace AT1WikiApplication
                     {
                         WikiTable[rowRef, 3] = definitionTextBox.Text;
                     }
-                    rowRef++;
+                    if (rowRef < 11)
+                    {
+                        rowRef++;
+                    }
+                   
 
                 }
                 displayListView();
@@ -299,7 +302,7 @@ namespace AT1WikiApplication
         {
             clearStatusStrip();
             //Renew rowRef as new file is initiated and empty WikiTable
-            rowRef = 0;
+            rowRef = -1;
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < col; j++)
@@ -353,20 +356,20 @@ namespace AT1WikiApplication
             clearStatusStrip();
             //Upper and lower bound for binary search
             int low = 0;
-            int high = rowRef -1;
+            int high = rowRef;
             int mid = 0;
             string target = searchTextBox.Text.ToLower();
             bool isFound = false;
 
             //Perform binary search
-            if (!string.IsNullOrEmpty(searchTextBox.Text))
+            if (!string.IsNullOrEmpty(searchTextBox.Text) && searchTextBox.Text != "Search Structure Name")
             {
                 while (low <= high)
                 {
                     mid = (high + low) / 2;
 
                     //Target found
-                    if (target == WikiTable[mid, 0].ToLower() &&  (listViewDisplay.SelectedIndices.Count > 0))
+                    if (target == WikiTable[mid, 0].ToLower())
                     {
                         isFound = true;
                         statusLabel1.Text = "Record Found";
@@ -409,7 +412,7 @@ namespace AT1WikiApplication
         }
         #endregion
 
-        #region "Event"
+        #region "Utility Method"
         //Event based method
         //Clear all display when data structure text box is double mouse clicked
         private void dataStructureTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -424,7 +427,11 @@ namespace AT1WikiApplication
         //Display data when a record is selected on ListView
         private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
-            clearDisplay();
+            dataStructureTextBox.Clear();
+            categoryTextBox.Clear();
+            linearButton.Checked = false;
+            nonLinearButton.Checked = false;
+            definitionTextBox.Clear();
             //ensure the selected indices will not turn to null for second click
             if (listViewDisplay.SelectedIndices.Count > 0) 
             {
@@ -441,8 +448,6 @@ namespace AT1WikiApplication
             if (searchTextBox.Text == "Search Structure Name")
             {
                 searchTextBox.Text = "";
-                
-
                 searchTextBox.ForeColor = Color.Black;
             }
         }
@@ -458,11 +463,13 @@ namespace AT1WikiApplication
                 searchTextBox.ForeColor = Color.Silver;
             }
         }
-        #endregion
-
+  
+        //Clear listview indices everytime search textbox is clicked
         private void searchTextBox_Click(object sender, EventArgs e)
         {
             listViewDisplay.SelectedIndices.Clear();
+            searchTextBox.ForeColor = Color.Black;
         }
+        #endregion
     }
 }
