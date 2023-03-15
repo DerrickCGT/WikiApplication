@@ -170,11 +170,7 @@ namespace AT1WikiApplication
                     {
                         WikiTable[rowRef, 3] = definitionTextBox.Text;
                     }
-                    if (rowRef < 11)
-                    {
-                        rowRef++;
-                    }
-                   
+                    rowRef++;
 
                 }
                 displayListView();
@@ -302,7 +298,7 @@ namespace AT1WikiApplication
         {
             clearStatusStrip();
             //Renew rowRef as new file is initiated and empty WikiTable
-            rowRef = -1;
+            rowRef = 0;
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < col; j++)
@@ -356,7 +352,7 @@ namespace AT1WikiApplication
             clearStatusStrip();
             //Upper and lower bound for binary search
             int low = 0;
-            int high = rowRef;
+            int high = rowRef -1;
             int mid = 0;
             string target = searchTextBox.Text.ToLower();
             bool isFound = false;
