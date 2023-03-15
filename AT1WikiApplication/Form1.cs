@@ -15,8 +15,7 @@ using System.Windows.Forms;
 // Name: Derrick Choong
 // Student ID: 30066568
 // Application: Wiki form to provide data structure definitions and categories.
-// version 1.4
-// Remarks: Final Completion and Code Comment in progress
+// Final Version
 
 namespace AT1WikiApplication
 {
@@ -28,6 +27,8 @@ namespace AT1WikiApplication
         }
 
         //Define the size of two dimensional string array: WikiTable of 12 rows and 4 columns
+        //9.1	Create a global 2D string array, use static variables for the
+        //dimensions (row = 4, column = 12),
         static int row = 12;
         static int col = 4;
         private string[,] WikiTable = new string[row, col];
@@ -36,6 +37,8 @@ namespace AT1WikiApplication
 
         #region "Display Method"
         //Method to display data in Listview
+        //9.8	Create a display method that will show the following information
+        //in a ListView: Name and Category,
         private void displayListView()
         {
             listViewDisplay.Items.Clear();
@@ -44,13 +47,14 @@ namespace AT1WikiApplication
             {
                 ListViewItem lvi = new ListViewItem(WikiTable[x, 0]);
                 lvi.SubItems.Add(WikiTable[x, 1]);
-                
+
                 listViewDisplay.Items.Add(lvi);
             }
 
         }
 
         //Method to clear data in all textboxes and radiobuttons
+        //9.5	Create a CLEAR method to clear the four text boxes so a new definition can be added,
         private void clearDisplay()
         {
             dataStructureTextBox.Clear();
@@ -87,6 +91,9 @@ namespace AT1WikiApplication
 
         #region "Sort"
         //Bubble sort algorithm to sort WikiTable by name ascending
+        //9.6	Write the code for a Bubble Sort method to sort the 2D array by Name ascending,
+        //ensure you use a separate swap method that passes the array element to be swapped
+        //(do not use any built-in array methods)
         private void sortButton_Click(object sender, EventArgs e)
         {
             clearStatusStrip();
@@ -144,12 +151,13 @@ namespace AT1WikiApplication
 
         #region "Add Button"
         //Add record to WikiTable
+        //9.2	Create an ADD button that will store the information from the 4 text boxes into the 2D array,
         private void addButton_Click(object sender, EventArgs e)
         {
             clearStatusStrip();
             //If the WikiTable is full with rowRef as row indexes < 12
             try
-            {   
+            {
                 //If an input is given
                 if (!string.IsNullOrEmpty(dataStructureTextBox.Text))
                 {
@@ -173,6 +181,7 @@ namespace AT1WikiApplication
                     rowRef++;
 
                 }
+                bubbleSort();
                 displayListView();
                 clearDisplay();
                 statusLabel1.Text = "Record Added";
@@ -190,6 +199,8 @@ namespace AT1WikiApplication
 
         #region "Edit Button"
         //Modifies a record with user input
+        //9.3	Create an EDIT button that will allow the user to modify
+        //any information from the 4 text boxes into the 2D array,
         private void editButton_Click(object sender, EventArgs e)
         {
             clearStatusStrip();
@@ -218,16 +229,19 @@ namespace AT1WikiApplication
                         WikiTable[selectedIndex, 3] = definitionTextBox.Text;
 
                     }
+                    bubbleSort();
                     displayListView();
                     statusLabel1.Text = "Record Edited";
                     statusLabel1.BackColor = Color.Green;
                 }
-            }                        
+            }
         }
         #endregion
 
         #region "Delete Button"
         //Delete selected record from WikiTable
+        //9.4	Create a DELETE button that removes all the information from
+        //a single entry of the array; the user must be prompted before the final deletion occurs, 
         private void deleteButton_Click(object sender, EventArgs e)
         {
             clearStatusStrip();
@@ -246,6 +260,7 @@ namespace AT1WikiApplication
                     rowRef--;
 
                 }
+                bubbleSort();
                 displayListView();
                 statusLabel1.Text = "Record Deleted";
                 statusLabel1.BackColor = Color.Green;
@@ -255,11 +270,15 @@ namespace AT1WikiApplication
 
         #region "Save File"
         //Save all records to binary file
+        //9.10	Create a SAVE button so the information from the 2D array
+        //can be written into a binary file called definitions.dat which
+        //is sorted by Name, ensure the user has the option to select an
+        //alternative file. Use a file stream and BinaryWriter to create the file.
         private void saveButton_Click(object sender, EventArgs e)
         {
             clearStatusStrip();
             SaveFileDialog savefile = new SaveFileDialog();
-            savefile.InitialDirectory = @"C:\\temp\\";
+            //savefile.InitialDirectory = "C:\\temp\\";
             savefile.Filter = "Binary File (*.bin)|*.bin";
             if (savefile.ShowDialog() == DialogResult.OK)
             {
@@ -294,6 +313,10 @@ namespace AT1WikiApplication
 
         #region "Load File"
         //Load file to add all records to WikiTable
+        //9.11	Create a LOAD button that will read the information from
+        //a binary file called definitions.dat into the 2D array, ensure
+        //the user has the option to select an alternative file. Use a file
+        //stream and BinaryReader to complete this task.
         private void loadButton_Click(object sender, EventArgs e)
         {
             clearStatusStrip();
@@ -309,7 +332,7 @@ namespace AT1WikiApplication
 
             using (OpenFileDialog openFile = new OpenFileDialog())
             {
-                openFile.InitialDirectory = @"C:\\temp\\";
+                //openFile.InitialDirectory = "C:\\temp\\";
 
                 if (openFile.ShowDialog() == DialogResult.OK)
                 {
@@ -339,6 +362,7 @@ namespace AT1WikiApplication
                     statusLabel1.Text = "File Loaded";
                     statusLabel1.BackColor = Color.Green;
                     br.Close();
+                    bubbleSort();
                     displayListView();
                 }
             }
@@ -347,12 +371,16 @@ namespace AT1WikiApplication
 
         #region "Binary Search Button"
         //Searches for a given target name within the array using binary search algorithm
+        //9.7	Write the code for a Binary Search for the Name in the 2D array and
+        //display the information in the other textboxes when found, add suitable
+        //feedback if the search in not successful and clear the search textbox
+        //(do not use any built-in array methods)
         private void searchButton_Click(object sender, EventArgs e)
         {
             clearStatusStrip();
             //Upper and lower bound for binary search
             int low = 0;
-            int high = rowRef -1;
+            int high = rowRef - 1;
             int mid = 0;
             string target = searchTextBox.Text.ToLower();
             bool isFound = false;
@@ -386,6 +414,7 @@ namespace AT1WikiApplication
                     listViewDisplay.Focus();
                     listViewDisplay.Items[mid].Selected = true;
                     focusTextBox(mid);
+                    searchTextBox.Clear();
                     MessageBox.Show("\"" + WikiTable[mid, 0] + "\" is found.");
                 }
                 else
@@ -413,7 +442,7 @@ namespace AT1WikiApplication
         //Clear all display when data structure text box is double mouse clicked
         private void dataStructureTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            
+
             clearDisplay();
             dataStructureTextBox.Focus();
             statusLabel1.Text = "Display Clear";
@@ -421,6 +450,8 @@ namespace AT1WikiApplication
         }
 
         //Display data when a record is selected on ListView
+        //9.9	Create a method so the user can select a definition (Name)
+        //from the ListView and all the information is displayed in the appropriate Textboxes,
         private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
             dataStructureTextBox.Clear();
@@ -429,7 +460,7 @@ namespace AT1WikiApplication
             nonLinearButton.Checked = false;
             definitionTextBox.Clear();
             //ensure the selected indices will not turn to null for second click
-            if (listViewDisplay.SelectedIndices.Count > 0) 
+            if (listViewDisplay.SelectedIndices.Count > 0)
             {
                 int currentItem = listViewDisplay.SelectedIndices[0];
 
@@ -459,7 +490,7 @@ namespace AT1WikiApplication
                 searchTextBox.ForeColor = Color.Silver;
             }
         }
-  
+
         //Clear listview indices everytime search textbox is clicked
         private void searchTextBox_Click(object sender, EventArgs e)
         {
